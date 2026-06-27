@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="lo">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game Top-up Store</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        /* ==========================================
+           1. ສ່ວນຂອງ CSS (ແຕ່ງສີສັນ ແລະ Layout)
+           ========================================== */
+
+
+        /* .auth-box {
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+        } */
+        .auth-box {
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+
+        body {
+            margin: 0;
+            /*ລຶບໄລຍະຫ່າງ */
+            padding: 0;
+            /* ແມ່ນໄລຍະຫ່າງພາຍໃນ */
+            overflow-x: hidden;
+            /* background-color: #14143A; */
+            /* ສີມ່ວງພື້ນຫຼັງ */
+            color: #ffffff;
+            font-family: 'Phetsarath OT', sans-serif;
+            /* ບ່ອນປ່ຽນຕົວໜັງສື */
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #13001e 0%, #2d0057 50%, #0d0025 100%);
+            z-index: -1;
+        }
+
+        /* ຈັດແຖບ Header ດ້ານເທິງ */
+        .main-header {
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            justify-content: space-between;
+            /* ແຍກອົງປະກອບໃຫ້ຢູ່ສົ້ນຊ້າຍ ແລະ ສົ້ນຂວາທີ່ສຸດ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບໃຫ້ຢູ່ເຄິ່ງກາງຕາມແນວຕັ້ງ */
+            padding: 12px 24px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນ(ເທິງ-ລຸ່ມ 12px, ຊ້າຍ-ຂວາ 20px) */
+            background-color: rgba(10, 0, 28, 0.85);
+            /* ສີມ່ວງເຂັ້ມ */
+            box-shadow: 0 4px 32px rgba(79, 15, 147, 0.5);
+            /* ໃສ່ເຫງົາທາງລຸ່ມໃຫ້ເບິ່ງມີມິຕິ */
+            position: fixed;
+            /* ຕັ້ງຄ່າໃຫ້ແຖບຕິດເກາະຕິດໜ້າຈໍເວລາເລື່ອນລົງ */
+            top: 0;
+            /* ໃຫ້ແຖບຕິດຢູ່ຂອບເທິງສຸດຂອງໜ໊າຈໍ */
+            right: 0;
+            left: 0;
+            z-index: 50;
+            /* ຕັ້ງຄ່າໃຫ້ແຖບຢູ່ຊັ້ນເທິງສຸດ */
+        }
+
+        .header-left {
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບໃຫ້ຢູ່ເຄິ່ງກາງຕາມແນວຕັ້ງ */
+            gap: 15px;
+            /* ເພີ່ມໄລຍະຫ່າງລະຫວ່າງເເຕ່ລະອົງປະກອບໃຫ້ຫ່າງກັນ */
+        }
+
+        /* ປຸ່ມສາມຂີດ Hamburger */
+        .menu-trigger-btn {
+            background: none;
+            /* ໃຫັໂປ່ງໃສ */
+            border: none;
+            /* ບໍ່ໃຫ້ມີເສັ້ນຂອບຂອງປຸ່ມ */
+            color: white;
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            cursor: pointer;
+            /* ປ່ຽນຮູບຮ່າງ mouse ໃຫ້ເປັນຮູບມື */
+            padding: 8px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນອ້ອມຮອບປຸ່ມ */
+            border-radius: 6px;
+            /*ປັບຂອບປຸ່ມໃຫ້ມີຄວາມມົນ */
+            transition: 0.2s;
+            /*ຕັ້ງຄ່າເອັບເຟັກເວລາປ່ຽນແປງ */
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            align-items: center;
+            /* ຈັດໄອຄອນທາງໃນຢູ່ເຄິ່ງກາງປຸ່ມຕາມແນວຕັ້ງ */
+            justify-content: center;
+            /* ຈັດໃຫ້ໄອຄອນທາງໃນຢູ່ເຄີ່ງກາງປຸ່ມຕາມແນວນອນ */
+        }
+
+        .menu-trigger-btn:hover {
+            background-color: rgba(157, 78, 221, 0.2);
+            /*ເມື່ອເອົາ mouse ໄປຊີ້ ໃຫ້ພື້ນຫຼັງເປັນສີຂາວຈາງໆ */
+        }
+
+        .icon-svg {
+            width: 28px;
+            /* ກຳນົດຄວາມກ້ວງໄອຄອນ */
+            height: 28px;
+            /* ກຳນົດຄວາມສູງຂອງໄອຄອນ */
+        }
+
+        /* ໂລໂກ້ kkkkkkkkkkk */
+        .logo-badge {
+            background-color: #d946ef;
+            /* ໃສສີພື້ນຫລັງ */
+            color: rgb(255, 255, 255);
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            font-weight: bold;
+            /*ປັບຕົວອັກສອນໃຫ້ເຂັ້ມຂື້ນ */
+            padding: 6px 16px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນ(ເທິງ-ລຸ່ມ 6 px, ຊ້າຍຂວາ 16 px) */
+            border-radius: 8px;
+            /* ປັບຂອບໂລໂກ້ໃຫ້ມົນ */
+            transform: rotate(-3deg);
+            /*ໜູນກ່ອງໂລໂກ້ໃຫ້ອຽງໄປທາງຊ້າຍເລັກນ້ອຍ 3 ອົງສາ */
+            font-size: 16px;
+            /* ກຳນົດຂະໜາດຕົວອັກສອນ */
+            box-shadow: 0 4px 10px rgba(217, 70, 239, 0.3);
+            /*ໃສ່ເຫງົາທາງລຸ່ມໃຫ້ເປັນສີບົວຈາງໆໃນກ່ອງ */
+        }
+
+        /* ປຸ່ມສະໝັກ ແລະ ເຂົ້າສູ່ລະບົບ */
+        /*.auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-login {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            align-self: center;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .btn-login:hover {
+            color: #ffffff;
+        } */
+
+        /*ປຸ່ມ  Logout */
+
+        .btn-register {
+            background-color: #ffffff;
+            /*ໃສ່ສີພື້ນຫຼັງປຸ່ມເປັນສີຂາວ */
+            color: #251545;
+            /* ປັບສີຕົວອັກສອນ */
+            padding: 8px 18px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນປຸ່ມ(ເທິງ-ລຸ່ມ 8 px, ຊ້າຍຂວາ 18 px)*/
+            border-radius: 20px;
+            /* ປັບຂອບໃຫ້ມົນ */
+            text-decoration: none;
+            /* ຕັດເສັ້ນຂີດກ້ອງອອກ(ກໍລະນີໃຊ້ Tag Link ເຮັດປຸ່ມ) */
+            font-size: 14px;
+            /* ກຳນົດຂະໜາດຕົວອັກສອນ */
+            font-weight: bold;
+            /* ປັບຕົວອັກສອນໃຫ້ເປັນໂຕເຂັ້ມ */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /*ໃສ່ເຫງົາ ທາງລຸ່ມຂອງປຸ່ມ */
+            transition: 0.2s;
+            /* ຕັ້ງຄ່າເອັບເຟັກຕອນເອົາ  MOUSE ໄປຊີ້ */
+        }
+
+        .btn-register:hover {
+            background-color: #f3f4f6;
+            /* ປ່ຽນສີພື້ນຫຼັງໃຫ້ເປັນສີເທົາອ່ອນໆ */
+            transform: translateY(-1px);
+            /* ໃຫ້ປຸ່ມຍັບຂື້ນເທິງໜ້ອຍໜຶ່ງ */
+        }
+
+        /* ກ່ອງເນື້ອຫາຫຼັກ */
+        .main-content {
+            max-width: 1200px;
+            /* ຈຳກັດຄວາມກວ້າງສູງສຸດເນື້ອຫາບໍໃຫ້ເກີນ 1200 px */
+            margin: 0 auto;
+            /* ຈັດໃຫ້ກ່ອງເນື້ອຫາທັງໝົດໃຫ້ຢູ່ເຄິ່ງກາງພໍດີ */
+            padding: 16px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນກ່ອງອ້ອມຮອບ */
+        }
+
+        /* ສ່ວນຫົວຂໍ້: ລາຍການທັງໝົດ */
+        .section-title-box {
+            display: flex;
+            justify-content: space-between;
+            /* ເເຍກອົງປະກອບທາງໃນໃຫ້ຢູ່ສົ້ນຊ້າຍ ແລະ ສົ້ນຂວາສຸດ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບທາງໃນໃຫ້ຢູ່ເຄິ່ງກາງຕາມເເນວຕັ້ງ */
+            margin: 100px 0 24px;
+            /*ເພີ່ມໄລຍະຫ່າງນອກກ່ອງ(ເທິງລຸ່ມ 24 px, ຊ້າຍ-ຂວາ 0) */
+            padding: 14px 20px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນກ່ອງອ້ອມຮອບ 14 px */
+            background-color: rgba(10, 0, 28, 0.70);
+            /* ໃສ່ພື້ນຫລັງກ່ອງ */
+            border-radius: 14px;
+            /* ປັບຂອບກ່ອງຫົວຂໍ້ໃຫ້ມີຄວາມມົນ  */
+            box-shadow: 0 4px 24px rgba(79, 15, 147, 0.3);
+            /*ໃສ່ເຫງົາທາງລຸ່ມບາງໆ */
+            margin-top: 100px;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            /*ກຳນົດຂະໝາດຕົວອັກສອນໃຫ້ໃຫຍ່ຂື້ນມາເລັກນ້ອຍ */
+            font-weight: bold;
+            /* ປັບຕົວອັກສອນເປັນສີເຂັ້ມ */
+            border-left: 4px solid #a72eba;
+            /* ເພີ່ມເສັ້ນຂີດຕັ້ງທາງດ້ານຊ້າຍ */
+            padding-left: 10px;
+            /* ປັບຕົວອັກສອນໃຫ້ຫ່າງອອກມາຈາກເສັ້ນຂີດທາງດ້ານຊ້າຍ*/
+            margin: 0;
+            /* ຕັດໄລຍະຫ່າງພາຍນອກຂອງຫົວຂໍ້ອອກທັງໝົດ */
+            color: #ffffff;
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+        }
+
+        /* --- Sidebar (ແຖບເມນູດ້ານຂ້າງ) & Overlay --- */
+        .menu-overlay {
+            position: fixed;
+            /*ຕັ່ງຄ່າໃຫ້ກ່ອງນີ້ຕິດໜ້າຈໍຕະຫຼອດ */
+            inset: 0;
+            /*ຍຶດກ່ອງນີ້ໃຫ້ເຕັມຈໍ 4ດ້ານ */
+            background-color: rgba(0, 0, 0, 0.65);
+            /*ໃສ່ສີພື້ນຫຼັງ*/
+            z-index: 30;
+            /*ຕັ້ງຄ່າຊັ້ນໃຫ້ຢູ່ເທິງເນື້ອຫາທົ່ວໄປ ແຕ່ຢູ່ແຖບເມນູຂ້າງ*/
+            display: none;
+            /* ຊ່ອນໄວ້ກ່ອນ */
+            opacity: 0;
+            /*ຕັ້ງຄ່າຄວາມໂປ່ງໃສ */
+            transition: opacity 0.3s ease;
+            /*ຕັ້ງຄ່າເອັບເຟັດຕອນຄ່ອຍໆແຈ້ງ*/
+        }
+
+        .menu-overlay.active {
+            display: block;
+            /*ສັ່ງໃຫ້ສາກພື້ນຫຼັງສະແດງຜົນອອກມາ*/
+            opacity: 1;
+            /*ປັບຄວາມເຂັ້ມໃຫ້ເຫັນສາກພື້ນຫຼັງໄດ້ຊັດເຈນ */
+        }
+
+        .main-sidebar {
+            position: fixed;
+            /*ຕັ້ງຄ່າໃຫ້ແຖບເມນູຂ້າງເກາະຕິດໜ້າຈໍຕະຫຼອດ */
+            top: 60px;
+            /* ຫຼົບແຖບ Header */
+            left: -300px;
+            /* ຊ່ອນໄວ້ທາງຊ້າຍສຸດຫຼຸດຂອບຈໍ */
+            width: 250px;
+            /*ກຳນົດຄວາມກ້ວາງຂອງແຖບເມນູຂ້າງ*/
+            height: calc(100vh - 60px);
+            /*ຄຳນວນຄວາມສູງໃຫ້ເຕັມຈໍພໍດີ ໂດຍເອົາຄວາມສູງຈໍທັງໝົດລົບອອກ60 px*/
+            background-color: rgba(13, 0, 32, 0.95);
+            /*ໃສ່ສີພື້ນຫຼັງ */
+            padding: 20px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນເມນູອ້ອມຮອບ */
+            z-index: 40;
+            /*ຕັ້ງຄ່າຊັ້ນໃຫ້ຢູ່ເທິງສາກພື້ນຫຼັງ ເພື່ອ ໃຫ້ກົດເມນູໄດ້*/
+            transition: left 0.3s ease;
+            /* ເລື່ອນອອກມາແບບນຸ້ມນວນ */
+            box-shadow: 4px 0 20px rgba(79, 15, 145, 0.5);
+            /*ໃສ່ເງົາທາງດ້ານຂວາ*/
+        }
+
+        .main-sidebar.active {
+            left: 0;
+            /* ເລື່ອນອອກມາເມື່ອຖືກກົດ */
+        }
+
+        .sidebar-list {
+            list-style: none;
+            /*ຕັດຈຸດດຳ*/
+            padding: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍໃນທີ່ຕິດມາກັບ Tag ລາຍການອອກ*/
+            margin: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍນອກທີ່ຕິດມາກັບ Tag ລາຍການອອກ*/
+        }
+
+        .sidebar-item {
+            display: block;
+            /*ປ່ຽນໃຫ້ເປັນ block ເພື່ອສາມາດກົດໄດ້ເຕັມແຖວ*/
+            padding: 13px 16px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນ*/
+            color: rgba(255, 255, 255, 0.8);
+            /*ຕັ້ງຄ່າສີຕົວອັກສອນ*/
+            text-decoration: none;
+            /*ຕັດເສັ້ນຂີດກ້ອງຂໍ້ຄວາມອອກ*/
+            border-radius: 10px;
+            /* ປັບຂອບຂອງແຕ່ລະລາຍການເມນູໃຫ້ມີຄວາມມົນ*/
+            margin-bottom: 6px;
+            /*ເພີ່ມໄລຍະຫ່າງດ້ານລຸ່ມ ເພື່ອໃຫ້ແຕ່ລະເມນູແຍກຫ່າງກັນ*/
+            font-weight: 600;
+            /*ປັບຕົວອັກສອນໃຫ້ໜາຂື້ນ*/
+            transition: 0.2s;
+            /*ຕັ້ງຄ່າເອັບເຟັກຕອນເອົາ mouse ໄປຊີ້ */
+            font-size: 15px;
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            /*ປ່ຽໜສີພື້ນຫລັງໃຫ້ເປັນສີຂາວຈາງໆ*/
+            color: #d946ef;
+            /*ປ່ຽນສີຕົວອັກສອນ*/
+        }
+
+
+
+
+        /* ຕາຕະລາງເກມ Grid Display */
+        .game-grid {
+            display: grid;
+            /* ເປີດໃຊ້ລະບົບຈັດວາງອົງປະກອບແບບຕາຕະລາງ */
+            grid-template-columns: repeat(3, 1fr);
+            /* ແບ່ງຫ້ອງຕາຕະລາງອອກເປັນ 3 ຖັນ ເທົ່າກັນ (ສຳລັບໂທລະສັບ)*/
+            gap: 14px;
+            /*ເພີ່ມໄລຍະຫ່າງລະຫວ່າງເເຕ່ລະຫ້ອງໃຫ້ຫ່າງກັນ */
+            margin-bottom: 40px;
+            /* ເພີ່ມໄລຍະຫ່າງດ້ານລຸ່ມຂອງຕາຕະລາງໃຫ້ຫ່າງຈາກສ່ວນອື່ນ */
+        }
+
+
+
+
+
+        /* ຄອມພິວເຕີ ຫຼື ຈໍໃຫຍ່ ໃຫ້ສະແດງ 6 ຄໍລຳ (lg:grid-cols-6) */
+        @media (min-width: 1024px) {
+            .game-grid {
+                grid-template-columns: repeat(6, 1fr);
+                /* ແບ່ງຫ້ອງຕາຕະລາງອອກເປັນ 6 ຖັນ ເທົ່າກັນ (ສຳລັບຈໍຄອມພິວເຕີ)*/
+
+            }
+        }
+
+        /* ກ່ອງແຜ່ນເກມ */
+        .game-card {
+            display: block;
+            /* ຕັ້ງຄ່າໃຫ້ກ່ອງສະແດງຜົນເປັນ  block */
+            background-color: rgba(79, 15, 147, 0.30);
+            /*ໃສ່ພື້ນຫລັງ*/
+            border-radius: 16px;
+            /* ປັບກ່ອງໃຫ້ມີຄວາມມົນ */
+            overflow: hidden;
+            /* ຕັດເນື້ອຫາ ຫຼື ຣູບພາບທາງໃນທີ່ລົ້ນຂອບມົນອອກໄປ ບໍ່ໃຫ້ສະແດງ */
+            text-decoration: none;
+            /*ຕັດເສັ້ນຂີດກ້ອງຂໍ້ຄວາມອອກ(ກໍລະນີກ່ອງເປັນ Link) */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /* ໃສ່ເຫງົາບາງໆ */
+            transition: transform 0.3s, box-shadow 0.3s;
+            /* ຕັ້ງຄ່າເອັບເຟັດຕອນຂະຫຍາຍ ແລະ ເຫົງາ */
+            border: 1px solid rgba(200, 100, 255, 0.5);
+        }
+
+        .game-card:hover {
+            transform: scale(1.05);
+            /* ຊີ້ແລ້ວຂະຫຍາຍໃຫຍ່ຂຶ້ນ */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            /*ເພີ່ມເຫງົາໃຫ້ເຂັ້ມຂື້ນ */
+        }
+
+        .game-image-wrapper {
+            position: relative;
+            /* ຕັ້ງຄ່າຕຳແໜ່ງເປັນຫຼັກ ເພື່ອໃຫ້ລູກທາງໃນ ອົງຕຳແໜ່ງຕາມກ່ອງນີ້ໄດ້ */
+            aspect-ratio: 1 / 1;
+            /*ບັງຄັບໃຫ້ກ່ອງເປັນຮູບຈະຕຸລັດ */
+            background-color: #13001e;
+            /* ໃສ່ສີພື້ນຫຼັງກ່ອງ */
+            overflow: hidden;
+            /* ຕັດສ່ວນຮູບພາບທີ່ລົ້ນຂອບກ່ອງອອກໄປ ບໍ່ໃຫ້ສະແດງ */
+        }
+
+        .game-image-wrapper img {
+            width: 100%;
+            /* ຄວາມກ້ວາງຂອງຮູບ */
+            height: 100%;
+            /* ຄວາມສູງຂອງຮູບ */
+            object-fit: cover;
+            /* ປັບຮູບຂະຫຍາຍເຕັມກ່ອງ (ຕັດສ່ວນເກີນອອກ) */
+        }
+
+        .game-info {
+            padding: 10px 8px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນກ່ອງອອ້ມຮອບ ເພື່ອບໍໃຫ້ຂໍ້ຄວາມຕິດຂອບ */
+            text-align: center;
+            /* ຈັດໃຫ້ຕົວອັກສອນທັງໝົດຢູ່ເຄິງກາງ */
+        }
+
+        .game-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.80rem;
+            /* ກຳນົດຂະໜາດຕົວອັກສອນ */
+            font-weight: 500;
+            /* ປັບຕົວອັກສອນໃຫ້ໜາປານກາງ */
+            color: rgba(255, 255, 255, 0.88);
+            /*ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            letter-spacing: 0.5px;
+            margin: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍນອກຂອງຂໍ້ຄວາມອອກໃຫ້ໝົດ*/
+            white-space: nowrap;
+            /*ບັງຄັບໃຫ້ຂໍໍ້ຄວາມຍາວເປັນແຖວດຽວ*/
+            overflow: hidden;
+            /*ຊ່ອນຂໍ້ຄວາມສ່ວນທີ່ຍາວເກີນຂອບກ່ອງບໍໃຫ້ເຫັນ*/
+            text-overflow: ellipsis;
+            /* ຍາວເກີນໃຫ້ຕັດເປັນ ... */
+            text-transform: uppercase;
+        }
+
+        /* ຊ່ອງທາງການຕິດຕໍ່ */
+        .contact-box {
+            /* ໃສ່ສີພື້ນຫຼັງ ແລະ ຄວາມໂຄ້ງໃຫ້ຄືກັບບ໋ອກເທິງ */
+            background-color: rgba(10, 0, 28, 0.80);
+            /* border-radius: 16px;     */
+            height: auto;
+            min-height: unset;
+            margin: 0;
+            padding: 24px 16px 40px 16px;
+            text-align: center;
+            /* ຖ້າມີເງົາ ຫຼື ຂອບສາມາດໃສ່ເພີ່ມໄດ້ */
+            box-shadow: 0 4px 15px rgba(71, 3, 3, 0.1);
+            width: 100%;
+        }
+
+        .contact-box a {
+            color: white;
+            text-decoration: none;
+            font-size: 19px;
+            font-weight: bold;
+
+
+        }
+
+
+        @media (min-width: 1024px) {
+            .contact-box {
+                width: 100%;
+
+            }
+        }
+
+        .contact-box-1 {
+
+
+            display: inline-block;
+            background: rgba(79, 15, 147, 0.30);
+            border: 1px solid rgba(157, 78, 221, 0.35);
+            border-radius: 16px;
+            padding: 24px 36px;
+            margin-bottom: 28px;
+            backdrop-filter: blur(8px);
+            box-shadow: rgba(157, 78, 221, 0.5);
+            border: 1px solid rgba(200, 100, 255, 0.5);
+
+        }
+
+
+        /* ປັບຂະໜາດຕົວໜັງສື Gmail ແລະ Whatsapp */
+        .contact-box-1 p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin: 8px 0;
+            margin: -1px;
+        }
+
+        .footer-copy {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+            margin-top: 20px;
+        }
+
+
+
+
+
+        .money {
+            color: #00e676;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        /* ປັບຂະໜາດຕົວໜັງສື Gmail ແລະ Whatsapp */
+        .contact-box p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin: 8px 0;
+        }
+
+        #loginBox {
+            display: none;
+        }
+
+        #storePage {
+            display: block;
+        }
+
+        .main-header>div:last-child {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .money {
+            background: #9767d1;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+
+
+
+</head>
+
+<body>
+    <!-- LOGIN -->
+    <div id="loginBox" class="auth-box">
+        <h2 class="mb-3">Login</h2>
+
+        <input id="loginEmail" class="form-control mb-3" type="email" placeholder="Email">
+
+        <input id="loginPassword" class="form-control mb-3" type="password" placeholder="Password">
+
+        <button class="btn btn-primary w-100" onclick="login()">
+            Login
+        </button>
+
+        <p class="mt-3 text-center">
+            Don't have account?
+            <a href="#" onclick="showRegister()">
+                Register here
+            </a>
+        </p>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="registerBox" class="auth-box hidden">
+        <h2 class="mb-3">Register</h2>
+
+        <input id="username" class="form-control mb-3" type="text" placeholder="Username">
+
+        <input id="email" class="form-control mb-3" type="email" placeholder="Email">
+
+        <input id="password" class="form-control mb-3" type="password" placeholder="Password">
+
+        <input id="confirmPassword" class="form-control mb-3" type="password" placeholder="Confirm Password">
+
+        <button class="btn btn-success w-100" onclick="registerUser()">
+            Register
+        </button>
+
+        <p class="mt-3 text-center">
+            Already have account?
+            <a href="#" onclick="showLogin()">
+                Login now
+            </a>
+        </p>
+    </div>
+
+    <!-- STORE PAGE -->
+    <section id="storePage">
+
+        <header class="main-header">
+            <div class="header-left">
+                <button id="menuBtn" class="menu-trigger-btn">
+                    <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M4 6h16M4 12h16M4 18h16">
+                        </path>
+                    </svg>
+                </button>
+                <div class="logo-badge">kkkkkkkkkkk</div>
+            </div>
+
+            <div>
+                <div class="money">
+                    💵 <span id="balance">0</span> LAK</div>
+
+                <button class="btn-register " onclick="logout()">
+                    Logout
+
+            </div>
+        </header>
+
+
+        <script>
+            let balance = localStorage.getItem("balance") || 0;
+
+            document.getElementById("balance").textContent =
+                parseInt(balance).toLocaleString();
+        </script>
+        <div id="overlay" class="menu-overlay"></div>
+
+        <aside id="sidebar" class="main-sidebar">
+            <ul class="sidebar-list">
+                <li><a href="Home1.html" class="sidebar-item">🏠 ໜ້າຫຼັກ</a></li>
+                <li><a href="Game.html" class="sidebar-item">🎮 ເຕີມເກມ</a></li>
+                <li><a href="Moblie.html" class="sidebar-item">📱 ເຕີມເງິນມືຖື</a></li>
+                <li><a href="Top Up.html" class="sidebar-item">💳 ເຕີມເງິນ</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+
+            <div class="section-title-box">
+                <h2 class="section-title">ລາຍການທັງໝົດ</h2>
+            </div>
+
+            <div class="game-grid">
+
+                <a href="Lao-Malasia.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8likojtLAJ0niW8_4PLjLrkvgVYApCS01qfMkYxTs9g&s=10"
+                            alt="MLBB">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">MLBB (ລາວ+ມາເລເຊຍ)</p>
+                    </div>
+                </a>
+
+                <a href="La-Th-Ph.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8likojtLAJ0niW8_4PLjLrkvgVYApCS01qfMkYxTs9g&s=10"
+                            alt="MLBB">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">MLBB ເຊີບ(ລາວ+ໄທ+ຟິລິບປິນ)</p>
+                    </div>
+                </a>
+
+                <a href="Lao.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8likojtLAJ0niW8_4PLjLrkvgVYApCS01qfMkYxTs9g&s=10"
+                            alt="MLBB">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">MLBB ເຊີບ(ລາວ)</p>
+                    </div>
+                </a>
+
+                <a href="Total-Mlbb.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8likojtLAJ0niW8_4PLjLrkvgVYApCS01qfMkYxTs9g&s=10"
+                            alt="MLBB">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">MLBB ເຊີບ(ລວມ)</p>
+                    </div>
+                </a>
+
+                <a href="Rov.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBKzs1DY2ewePZf55_3ZVzCvRzMh4tFprY5vclc2DNCA&s=10"
+                            alt="ROV">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">ROV</p>
+                    </div>
+                </a>
+
+                <a href="Free Frie.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSTFfNoCPIuiVZD9K5OrmoDAgEDSV9enHHH3JtaxNFkei8WOagIXWIwVc6s&s=10"
+                            alt="free fire">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">free fire ເຊີບ(ໄທ)</p>
+                    </div>
+                </a>
+                <a href="Roblox.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQak2gbeO5VrShtHOXwcDrlzEsrSdOFO5QOEI6yhqrgPQ&s"
+                            alt="free fire">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">roblox</p>
+                    </div>
+                </a>
+                <a href="Zenless Zon Zero.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqoc_zUkU91LZRPFhKERcd_9CN_tXUkpoB0FRqccO9Zg&s=10"
+                            alt="Zenless Zon Zero">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">Zenless Zon Zero</p>
+                    </div>
+                </a>
+                <a href="Genshin lmpaet.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEDHNqp2SPTYRWY2T7KRrYZWHAN9VFJSZmmf8Ne0NI7w&s=10"
+                            alt="Genshin lmpaet">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">Genshin lmpaet</p>
+                    </div>
+                    <a href="Honkai Star Rail.html" class="game-card">
+                        <div class="game-image-wrapper">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSh7Uv27rmua4dorDNGfdCUBPD64rkBTmc1cqNNzOmB_w&s=10"
+                                alt="Honkai Star Rail">
+                        </div>
+                        <div class="game-info">
+                            <p class="game-name">Honkai Star Rail</p>
+                        </div>
+                    </a>
+                </a>
+                <a href="Lao telecom.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTuEs89WIc20aoAVILfRhlE2x7gFmhFzXwOmsbUK_AzzA&s=10"
+                            alt="Lao telecom">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">lao telecom</p>
+                    </div>
+                </a>
+                <a href="Tplus.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSefS4jY9CUSsmLTynidwSKt1qFEPOy9S3pw90W2J9XzA&s"
+                            alt="T puls">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">T plus</p>
+                    </div>
+                </a>
+                <a href="Unitel.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5Vd7FFVl2-svova4949gEAYwdB6Bafy3OUa0B31iGBA&s=10"
+                            alt="Unitel">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">Unitel</p>
+                    </div>
+                </a>
+                <a href="Total-Moblie.html" class="game-card">
+                    <div class="game-image-wrapper">
+                        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkpTIOgz_rq0pWPqfAjTyqh9Yjhtwow-iSQyxQW99FDA&s=10"
+                            alt="Total moblie">
+                    </div>
+                    <div class="game-info">
+                        <p class="game-name">ເຕິມເງິນໂທແບບລວມ</p>
+                    </div>
+                </a>
+            </div>
+
+
+        </main>
+
+        <div class="contact-box">
+            <p>.......</p>
+            <p style="font-size: 25px;font-weight: bold;">ບໍລິການເຕີມເກມອອນລາຍ ລາຄາຖືກ ປອດໄພ ວ່ອງໄວ ຕະຫຼອດ 24 ຊົ່ວໂມງ
+            </p>
+            <br>
+            <div class="contact-box-1">
+                <p style="font-weight: bold; font-size: 25px;">ກໍລະນີເຕີມບໍ່ໄດ້ ກະລຸນາຕິດຕໍ່ທາງ:</p>
+                <p>📧Gmail : be@gmail.com</p>
+                <p>📱Whatsapp : +8562058764321</p>
+            </div>
+
+            <br>
+            <hr>
+            <br>
+            <a href="Terms and Conditions.html">ຂໍ້ຕົກລົງ ແລະ ເງື່ອນໄຂບໍລິການ.</a> <br>
+
+            <a href="Privacy Policy.html">ນະໂຍບາຍສ່ວນໂຕ.</a>
+            <P class="footer-copy">© All rights reserved.Designed for Gamers 🎮</P>
+        </div>
+        <script>
+            function showRegister() {
+                document.getElementById("loginBox").classList.add("hidden");
+                document.getElementById("registerBox").classList.remove("hidden");
+            }
+
+            function showLogin() {
+                document.getElementById("registerBox").classList.add("hidden");
+                document.getElementById("loginBox").classList.remove("hidden");
+            }
+
+            function registerUser() {
+
+                let username = document.getElementById("username").value;
+                let email = document.getElementById("email").value;
+                let password = document.getElementById("password").value;
+                let confirmPassword = document.getElementById("confirmPassword").value;
+
+                if (username == "" || email == "" || password == "") {
+                    alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ");
+                    return;
+                }
+
+                if (password !== confirmPassword) {
+                    alert("Password ບໍ່ກົງກັນ");
+                    return;
+                }
+
+                localStorage.setItem("username", username);
+                localStorage.setItem("email", email);
+                localStorage.setItem("password", password);
+
+                alert("ສະໝັກສຳເລັດ");
+
+                showLogin();
+            }
+
+            function login() {
+
+                let email = document.getElementById("loginEmail").value;
+                let password = document.getElementById("loginPassword").value;
+
+                let savedEmail = localStorage.getItem("email");
+                let savedPassword = localStorage.getItem("password");
+
+                if (email === savedEmail && password === savedPassword) {
+
+                    // ປິດ Login
+                    document.getElementById("loginBox").style.display = "none";
+
+                    // ເປີດໜ້າຫຼັກ
+                    document.getElementById("storePage").style.display = "block";
+
+                } else {
+                    alert("Email ຫຼື Password ບໍ່ຖືກ");
+                }
+            }
+
+            function logout() {
+
+                // ປິດໜ້າຫຼັກ
+                document.getElementById("storePage").style.display = "none";
+
+                // ເປີດ Login
+                document.getElementById("loginBox").style.display = "block";
+
+            }
+
+        </script>
+        <script>
+            // 🛠️ ແກ້ໄຂບັນຫາກົດປຸ່ມບໍ່ໄດ້: ຂຽນຟັງຊັນຄວບຄຸມການ ເປີດ-ປິດ ໃຫ້ຄົບຖ້ວນ
+            const menuBtn = document.getElementById('menuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            // ຟັງຊັນສຳລັບ ເປີດ ຫຼື ປິດ ເມນູ (Toggle)
+            function toggleMenu() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            // ເມື່ອກົດປຸ່ມສາມຂີດ ໃຫ້ເປີດເມນູດ້ານຂ້າງອອກມາ
+            menuBtn.addEventListener('click', toggleMenu);
+
+            // ເມື່ອກົດພື້ນຫຼັງມືດ (Overlay) ໃຫ້ປິດເມນູກັບຄືນໄປຊ່ອນຄືເກົ່າ
+            overlay.addEventListener('click', toggleMenu);
+        </script>
+
+</body>
+
+</html>

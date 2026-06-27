@@ -1,0 +1,1217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        /* ==========================================
+           1. ສ່ວນຂອງ CSS (ແຕ່ງສີສັນ ແລະ Layout)
+           ========================================== */
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+
+        body {
+            margin: 0;
+            /*ລຶບໄລຍະຫ່າງ */
+            padding: 0;
+            /* ແມ່ນໄລຍະຫ່າງພາຍໃນ */
+            overflow-x: hidden;
+            /* background-color: #14143A; */
+            /* ສີມ່ວງພື້ນຫຼັງ */
+            color: #ffffff;
+            font-family: 'Phetsarath OT', sans-serif;
+            /* ບ່ອນປ່ຽນຕົວໜັງສື */
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #13001e 0%, #2d0057 50%, #0d0025 100%);
+            z-index: -1;
+        }
+
+        /* ຈັດແຖບ Header ດ້ານເທິງ */
+        .main-header {
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            justify-content: space-between;
+            /* ແຍກອົງປະກອບໃຫ້ຢູ່ສົ້ນຊ້າຍ ແລະ ສົ້ນຂວາທີ່ສຸດ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບໃຫ້ຢູ່ເຄິ່ງກາງຕາມແນວຕັ້ງ */
+            padding: 12px 24px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນ(ເທິງ-ລຸ່ມ 12px, ຊ້າຍ-ຂວາ 20px) */
+            background-color: rgba(10, 0, 28, 0.85);
+            /* ສີມ່ວງເຂັ້ມ */
+            box-shadow: 0 4px 32px rgba(79, 15, 147, 0.5);
+            /* ໃສ່ເຫງົາທາງລຸ່ມໃຫ້ເບິ່ງມີມິຕິ */
+            position: fixed;
+            /* ຕັ້ງຄ່າໃຫ້ແຖບຕິດເກາະຕິດໜ້າຈໍເວລາເລື່ອນລົງ */
+            top: 0;
+            /* ໃຫ້ແຖບຕິດຢູ່ຂອບເທິງສຸດຂອງໜ໊າຈໍ */
+            right: 0;
+            left: 0;
+            z-index: 50;
+            /* ຕັ້ງຄ່າໃຫ້ແຖບຢູ່ຊັ້ນເທິງສຸດ */
+        }
+
+        .header-left {
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບໃຫ້ຢູ່ເຄິ່ງກາງຕາມແນວຕັ້ງ */
+            gap: 15px;
+            /* ເພີ່ມໄລຍະຫ່າງລະຫວ່າງເເຕ່ລະອົງປະກອບໃຫ້ຫ່າງກັນ */
+        }
+
+        /* ປຸ່ມສາມຂີດ Hamburger */
+        .menu-trigger-btn {
+            background: none;
+            /* ໃຫັໂປ່ງໃສ */
+            border: none;
+            /* ບໍ່ໃຫ້ມີເສັ້ນຂອບຂອງປຸ່ມ */
+            color: white;
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            cursor: pointer;
+            /* ປ່ຽນຮູບຮ່າງ mouse ໃຫ້ເປັນຮູບມື */
+            padding: 8px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນອ້ອມຮອບປຸ່ມ */
+            border-radius: 6px;
+            /*ປັບຂອບປຸ່ມໃຫ້ມີຄວາມມົນ */
+            transition: 0.2s;
+            /*ຕັ້ງຄ່າເອັບເຟັກເວລາປ່ຽນແປງ */
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            align-items: center;
+            /* ຈັດໄອຄອນທາງໃນຢູ່ເຄິ່ງກາງປຸ່ມຕາມແນວຕັ້ງ */
+            justify-content: center;
+            /* ຈັດໃຫ້ໄອຄອນທາງໃນຢູ່ເຄີ່ງກາງປຸ່ມຕາມແນວນອນ */
+        }
+
+        .menu-trigger-btn:hover {
+            background-color: rgba(157, 78, 221, 0.2);
+            /*ເມື່ອເອົາ mouse ໄປຊີ້ ໃຫ້ພື້ນຫຼັງເປັນສີຂາວຈາງໆ */
+        }
+
+
+        .icon-svg {
+            width: 28px;
+            /* ກຳນົດຄວາມກ້ວງໄອຄອນ */
+            height: 28px;
+            /* ກຳນົດຄວາມສູງຂອງໄອຄອນ */
+        }
+
+        /* ໂລໂກ້ kkkkkkkkkkk */
+        .logo-badge {
+            background-color: #d946ef;
+            /* ໃສສີພື້ນຫລັງ */
+            color: rgb(255, 255, 255);
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            font-weight: bold;
+            /*ປັບຕົວອັກສອນໃຫ້ເຂັ້ມຂື້ນ */
+            padding: 6px 16px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນ(ເທິງ-ລຸ່ມ 6 px, ຊ້າຍຂວາ 16 px) */
+            border-radius: 8px;
+            /* ປັບຂອບໂລໂກ້ໃຫ້ມົນ */
+            transform: rotate(-3deg);
+            /*ໜູນກ່ອງໂລໂກ້ໃຫ້ອຽງໄປທາງຊ້າຍເລັກນ້ອຍ 3 ອົງສາ */
+            font-size: 16px;
+            /* ກຳນົດຂະໜາດຕົວອັກສອນ */
+            box-shadow: 0 4px 10px rgba(217, 70, 239, 0.3);
+            /*ໃສ່ເຫງົາທາງລຸ່ມໃຫ້ເປັນສີບົວຈາງໆໃນກ່ອງ */
+        }
+
+
+
+
+        /*ປຸ່ມ  Logout */
+
+        /*  .btn-register {
+          /*  background-color: #ffffff;
+            /*ໃສ່ສີພື້ນຫຼັງປຸ່ມເປັນສີຂາວ */
+        /*  color: #251545;
+            /* ປັບສີຕົວອັກສອນ */
+        /*padding: 8px 18px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນປຸ່ມ(ເທິງ-ລຸ່ມ 8 px, ຊ້າຍຂວາ 18 px)*/
+        /*border-radius: 20px;
+            /* ປັບຂອບໃຫ້ມົນ */
+        /*text-decoration: none;
+            /* ຕັດເສັ້ນຂີດກ້ອງອອກ(ກໍລະນີໃຊ້ Tag Link ເຮັດປຸ່ມ) */
+        /*font-size: 14px;
+            /* ກຳນົດຂະໜາດຕົວອັກສອນ */
+        /*font-weight: bold;
+            /* ປັບຕົວອັກສອນໃຫ້ເປັນໂຕເຂັ້ມ */
+        /*box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            /*ໃສ່ເຫງົາ ທາງລຸ່ມຂອງປຸ່ມ */
+        /*transition: 0.2s;
+            /* ຕັ້ງຄ່າເອັບເຟັກຕອນເອົາ  MOUSE ໄປຊີ້ 
+        } 
+
+
+
+        /* --- Sidebar (ແຖບເມນູດ້ານຂ້າງ) & Overlay --- */
+        .menu-overlay {
+            position: fixed;
+            /*ຕັ່ງຄ່າໃຫ້ກ່ອງນີ້ຕິດໜ້າຈໍຕະຫຼອດ */
+            inset: 0;
+            /*ຍຶດກ່ອງນີ້ໃຫ້ເຕັມຈໍ 4ດ້ານ */
+            background-color: rgba(0, 0, 0, 0.65);
+            /*ໃສ່ສີພື້ນຫຼັງ*/
+            z-index: 30;
+            /*ຕັ້ງຄ່າຊັ້ນໃຫ້ຢູ່ເທິງເນື້ອຫາທົ່ວໄປ ແຕ່ຢູ່ແຖບເມນູຂ້າງ*/
+            display: none;
+            /* ຊ່ອນໄວ້ກ່ອນ */
+            opacity: 0;
+            /*ຕັ້ງຄ່າຄວາມໂປ່ງໃສ */
+            transition: opacity 0.3s ease;
+            /*ຕັ້ງຄ່າເອັບເຟັດຕອນຄ່ອຍໆແຈ້ງ*/
+        }
+
+        .menu-overlay.active {
+            display: block;
+            /*ສັ່ງໃຫ້ສາກພື້ນຫຼັງສະແດງຜົນອອກມາ*/
+            opacity: 1;
+            /*ປັບຄວາມເຂັ້ມໃຫ້ເຫັນສາກພື້ນຫຼັງໄດ້ຊັດເຈນ */
+        }
+
+        .main-sidebar {
+            position: fixed;
+            /*ຕັ້ງຄ່າໃຫ້ແຖບເມນູຂ້າງເກາະຕິດໜ້າຈໍຕະຫຼອດ */
+            top: 60px;
+            /* ຫຼົບແຖບ Header */
+            left: -300px;
+            /* ຊ່ອນໄວ້ທາງຊ້າຍສຸດຫຼຸດຂອບຈໍ */
+            width: 250px;
+            /*ກຳນົດຄວາມກ້ວາງຂອງແຖບເມນູຂ້າງ*/
+            height: calc(100vh - 60px);
+            /*ຄຳນວນຄວາມສູງໃຫ້ເຕັມຈໍພໍດີ ໂດຍເອົາຄວາມສູງຈໍທັງໝົດລົບອອກ60 px*/
+            background-color: rgba(13, 0, 32, 0.95);
+            /*ໃສ່ສີພື້ນຫຼັງ */
+            padding: 20px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນເມນູອ້ອມຮອບ */
+            z-index: 40;
+            /*ຕັ້ງຄ່າຊັ້ນໃຫ້ຢູ່ເທິງສາກພື້ນຫຼັງ ເພື່ອ ໃຫ້ກົດເມນູໄດ້*/
+            transition: left 0.3s ease;
+            /* ເລື່ອນອອກມາແບບນຸ້ມນວນ */
+            box-shadow: 4px 0 20px rgba(79, 15, 145, 0.5);
+            /*ໃສ່ເງົາທາງດ້ານຂວາ*/
+        }
+
+        .main-sidebar.active {
+            left: 0;
+            /* ເລື່ອນອອກມາເມື່ອຖືກກົດ */
+        }
+
+        .sidebar-list {
+            list-style: none;
+            /*ຕັດຈຸດດຳ*/
+            padding: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍໃນທີ່ຕິດມາກັບ Tag ລາຍການອອກ*/
+            margin: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍນອກທີ່ຕິດມາກັບ Tag ລາຍການອອກ*/
+        }
+
+        .sidebar-item {
+            display: block;
+            /*ປ່ຽນໃຫ້ເປັນ block ເພື່ອສາມາດກົດໄດ້ເຕັມແຖວ*/
+            padding: 13px 16px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນ*/
+            color: rgba(255, 255, 255, 0.8);
+            /*ຕັ້ງຄ່າສີຕົວອັກສອນ*/
+            text-decoration: none;
+            /*ຕັດເສັ້ນຂີດກ້ອງຂໍ້ຄວາມອອກ*/
+            border-radius: 10px;
+            /* ປັບຂອບຂອງແຕ່ລະລາຍການເມນູໃຫ້ມີຄວາມມົນ*/
+            margin-bottom: 6px;
+            /*ເພີ່ມໄລຍະຫ່າງດ້ານລຸ່ມ ເພື່ອໃຫ້ແຕ່ລະເມນູແຍກຫ່າງກັນ*/
+            font-weight: 600;
+            /*ປັບຕົວອັກສອນໃຫ້ໜາຂື້ນ*/
+            transition: 0.2s;
+            /*ຕັ້ງຄ່າເອັບເຟັກຕອນເອົາ mouse ໄປຊີ້ */
+            font-size: 15px;
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            /*ປ່ຽໜສີພື້ນຫລັງໃຫ້ເປັນສີຂາວຈາງໆ*/
+            color: #d946ef;
+            /*ປ່ຽນສີຕົວອັກສອນ*/
+        }
+
+        /* ປຸ່ມສະໝັກ ແລະ ເຂົ້າສູ່ລະບົບ */
+        /*  .auth-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-login {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            align-self: center;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .btn-login:hover {
+            color: #ffffff;
+        } */
+
+
+
+
+
+
+
+        /* ຕາຕະລາງເກມ Grid Display */
+        /* .game-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 40px;
+        } */
+
+        /* ຄອມພິວເຕີ ຫຼື ຈໍໃຫຍ່ ໃຫ້ສະແດງ 6 ຄໍລຳ (lg:grid-cols-6) */
+        /*  @media (min-width: 1024px) {
+            .game-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+        } */
+
+
+
+
+
+
+
+        .btn-register:hover {
+            background-color: #f3f4f6;
+            transform: translateY(-1px);
+        }
+
+        .container {
+            max-width: 455px;
+            margin: 0 auto;
+
+        }
+
+
+
+
+        /* ສ່ວນກ່ອງປ້ອນຂໍ້ມູນ ID */
+        .input-group {
+            margin-bottom: 15px;
+
+        }
+
+        .label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #4a2d8a;
+            border-radius: 10px;
+            background-color: #2d1664;
+            color: white;
+            box-sizing: border-box;
+            font-size: 16px;
+            font-family: 'Phetsarath OT', sans-serif;
+            margin-top: 5px;
+
+        }
+
+        .input-1 {
+            background: linear-gradient(145deg,
+                    rgba(120, 40, 200, 0.4),
+                    rgba(60, 0, 120, 0.6));
+            border: 1px solid rgba(200, 100, 255, 0.5);
+            height: auto;
+            width: 455px;
+            border-radius: 12px;
+            padding: 15px 15px 0 15px;
+            box-sizing: border-box;
+            margin-top: 25px;
+        }
+
+
+
+        /* ສ່ວນບັດເລືອກລາຄາສິນຄ້າ */
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 25px;
+            width: 455px;
+            justify-content: center;
+        }
+
+        @media (min-width: 1024px) {
+            .product-grid {
+                grid-template-columns: repeat(3, 1fr);
+                width: 500px;
+            }
+
+            .container {
+                max-width: 500px;
+                margin: 0 auto;
+            }
+
+            .input-1 {
+                height: 260px;
+                width: 500px;
+            }
+        }
+
+        .product-card {
+            background: linear-gradient(145deg,
+                    rgba(120, 40, 200, 0.4),
+                    rgba(60, 0, 120, 0.6));
+            border: 1px solid rgba(200, 100, 255, 0.5);
+            backdrop-filter: blur(12px);
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            height: 140px;
+            width: 240px;
+            /*  box-shadow: 0 4px 20px rgba(150, 50, 255, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1); */
+        }
+
+        .product-card p {
+            margin: 0;
+            padding: 0;
+            line-height: 0.8;
+            margin-top: -10px;
+            font-size: 20px;
+            font-family: 'Arial', sans-serif;
+
+
+        }
+
+        .product-card h4 {
+            margin: 0;
+            padding: 0;
+            margin-top: 11px;
+            font-family: 'Arial', sans-serif;
+            font-size: 20px;
+        }
+
+        .product-card svg {
+            margin-top: -5px;
+        }
+
+
+
+        .product-card:hover {
+            border-color: #7042f4;
+        }
+
+        .product-card.selected {
+            border-color: #00ff88;
+            /* ຂອບສີຂຽວເວລາເລືອກ */
+            background: #5632c4;
+        }
+
+
+        /* ສ່ວນປັອບອັບ Bottom Sheet (ຊ່ອນໄວ້ທາງລຸ່ມກ່ອນ) */
+        .bottom-sheet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            /* ຊ່ອນພື້ນຫຼັງມືດ */
+            z-index: 999;
+        }
+
+        .bottom-sheet {
+            position: fixed;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            background: linear-gradient(160deg, #1a0040 0%, #2d0057 50%, #0d0025 100%);
+            border: 1px solid rgba(157, 78, 221, 0.5);
+            box-shadow: 0 -10px 40px rgba(150, 50, 255, 0.4),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 24px 24px 0 0;
+            transition: bottom 0.4s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+        }
+
+
+        /* ເມື່ອມີຄລາສ active ໃຫ້ເລືອກຂຶ້ນມາ */
+        .bottom-sheet.active {
+            bottom: 0;
+        }
+
+        .sheet-content {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 25px;
+        }
+
+        .sheet-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            font-size: 16px;
+            border-bottom: 1px dashed rgba(157, 78, 221, 0.4);
+            padding-bottom: 10px;
+            margin-top: -2px;
+            margin-top: 15px;
+        }
+
+        .sheet-row span {
+            font-weight: bold;
+        }
+
+        /* ປຸ່ມຢືນຢັນສີເຫຼືອງ */
+        .btn-confirm {
+            width: 100%;
+            background-color: #ffc107;
+            color: #1e0b4a;
+            border: none;
+            padding: 15px;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+            font-family: 'Phetsarath OT', sans-serif;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            color: white;
+            float: right;
+            font-size: 20px;
+            cursor: pointer;
+
+
+
+        }
+
+
+
+        /* ຊ່ອງທາງການຕິດຕໍ່ */
+        .contact-box {
+            /* ໃສ່ສີພື້ນຫຼັງ ແລະ ຄວາມໂຄ້ງໃຫ້ຄືກັບບ໋ອກເທິງ */
+            background-color: rgba(10, 0, 28, 0.80);
+            /* border-radius: 16px;     */
+            height: auto;
+            min-height: unset;
+            margin: 0;
+            padding: 24px 16px 40px 16px;
+            text-align: center;
+            /* ຖ້າມີເງົາ ຫຼື ຂອບສາມາດໃສ່ເພີ່ມໄດ້ */
+            box-shadow: 0 4px 15px rgba(71, 3, 3, 0.1);
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        .contact-box a {
+            color: white;
+            text-decoration: none;
+            font-size: 19px;
+            font-weight: bold;
+
+
+        }
+
+
+        @media (min-width: 1024px) {
+            .contact-box {
+                width: 100%;
+
+            }
+        }
+
+        .contact-box-1 {
+            /* ໃສ່ສີພື້ນຫຼັງ ແລະ ຄວາມໂຄ້ງໃຫ້ຄືກັບບ໋ອກເທິງ */
+            /* background-color: rgb(68, 19, 141); 
+            border-radius: 16px;
+            width: 350px;
+            height: auto;
+            margin: 40px auto 0 auto;
+            padding: 24px;
+            text-align: center;
+            /* ຖ້າມີເງົາ ຫຼື ຂອບສາມາດໃສ່ເພີ່ມໄດ້ */
+            /*  box-shadow: 0 4px 15px rgba(71, 3, 3, 0.1);
+            margin-top: -1px;*/
+
+            display: inline-block;
+            background: rgba(79, 15, 147, 0.30);
+            border: 1px solid rgba(157, 78, 221, 0.35);
+            border-radius: 16px;
+            padding: 24px 36px;
+            margin-bottom: 28px;
+            backdrop-filter: blur(8px);
+            box-shadow: rgba(157, 78, 221, 0.5);
+            border: 1px solid rgba(200, 100, 255, 0.5);
+
+
+        }
+
+
+        /* ປັບຂະໜາດຕົວໜັງສື Gmail ແລະ Whatsapp */
+        .contact-box-1 p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin: 8px 0;
+            margin: -1px;
+        }
+
+        .footer-copy {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.55);
+            margin: 0;
+            margin-top: 20px;
+        }
+
+
+
+        /* ປັບແຕ່ງຮູບ */
+        .img-box {
+            position: relative;
+            overflow: hidden;
+            border-radius: 25px;
+            margin-top: 75px;
+        }
+
+        .img-box::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to top,
+                    rgba(60, 0, 120, 0.9),
+                    transparent);
+
+        }
+
+        .banner {
+            width: 100%;
+            display: block;
+        }
+
+
+
+        .box-1 {
+            background: linear-gradient(145deg,
+                    rgba(120, 40, 200, 0.4),
+                    rgba(60, 0, 120, 0.6));
+
+            height: auto;
+            width: 100%;
+            max-width: 500px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-sizing: border-box;
+
+        }
+
+        .box-2 {
+            background: linear-gradient(145deg,
+                    rgba(120, 40, 200, 0.4),
+                    rgba(60, 0, 120, 0.6));
+            border: 1px solid rgba(200, 100, 255, 0.5);
+            height: auto;
+            width: 100%;
+            margin-top: 15px;
+            border-radius: 12px;
+            box-sizing: border-box;
+            margin-top: 25px;
+
+        }
+
+        .main-header>div:last-child {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .money {
+            background: #9767d1;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- STORE PAGE -->
+    <section id="storePage">
+
+        <header class="main-header">
+            <div class="header-left">
+                <button id="menuBtn" class="menu-trigger-btn">
+                    <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                            d="M4 6h16M4 12h16M4 18h16">
+                        </path>
+                    </svg>
+                </button>
+                <div class="logo-badge">kkkkkkkkkkk</div>
+            </div>
+
+            <div>
+                <div class="money">
+                    💵 <span id="balance">0</span> LAK</div>
+
+            </div>
+        </header>
+
+
+        <script>
+            let balance = localStorage.getItem("balance") || 0;
+
+            document.getElementById("balance").textContent =
+                parseInt(balance).toLocaleString();
+        </script>
+        <div id="overlay" class="menu-overlay"></div>
+
+
+        <aside id="sidebar" class="main-sidebar">
+            <ul class="sidebar-list">
+                <li><a href="Home1.html" class="sidebar-item">🏠ໜ້າຫຼັກ</a></li>
+                <li><a href="Game.html" class="sidebar-item">🎮ເຕີມເກມ</a></li>
+                <li><a href="Moblie.html" class="sidebar-item">📱ເຕີມເງິນມືຖື</a></li>
+                <li><a href="Top Up.html" class="sidebar-item">💳ເຕີມເງິນ</a></li>
+            </ul>
+        </aside>
+        <div class="container">
+
+            <div class="box-1">
+                <div class="img-box">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS8likojtLAJ0niW8_4PLjLrkvgVYApCS01qfMkYxTs9g&s=10"
+                        class="banner">
+                </div>
+
+                <div>
+                    <h1 style="font-size: 28px; margin-top: 5px; padding: 10px; ">Mobile Legends( ລາວ )</h1>
+                    <p style="font-size: 20px; font-weight: bold;  padding: 10px;margin-top: -5px;">
+                        ສາມາດເຕີມໄອດີໄດ້ສະເພາະ ເຊີບລາວ</br>
+                        ໝາຍເຫດ" ກະລຸນາກວດເບິ່ງໄອດີ ແລະ ລາຄາທີ່ທ່ານເລືອກ "</p>
+                </div>
+
+
+            </div>
+
+            <div class="input-1">
+
+                <div class="input-group">
+
+                    <div class="input-group">
+
+                        <label style="font-size: 18px; font-weight: bold;">ກະລຸນາປ້ອນຂໍ້ມູນ 
+                            <br>
+                        </label>
+
+                        <label style="font-size: 20px; font-weight: bold;">UID ຜູ້ໃຊ້ *</label>
+                        <input type="number" id="userId" placeholder="ຕົວຢ່າງ: 121345678......">
+                    </div>
+
+                    <div class="input-group">
+
+                        <label style="font-size: 20px; font-weight: bold;">Zone ID *</label>
+                        <input type="number" id="zoneId" placeholder="ຕົວຢ່າງ: 1234">
+
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="box-2">
+                <h3 style="font-size: 25px; margin-top: 8px;padding: 10px">ເລືອກລາຄາທີ່ຕ້ອງການເຕີມ</h3>
+            </div>
+
+            <div class="product-grid">
+
+                <div class="product-card" onclick="selectProduct('6 Diamonds ( 6 + 0 Bonus )', '2,800 ກີບ')">
+
+                    <h4>6 Diamonds💎💎</br>
+                        (6 + 0 bonus)
+                    </h4>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">2,800 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('16 Diamonds ( 15 + 1 Bonus )', '7,000 ກີບ')">
+
+                    <h4>16 Diamonds💎💎</br>
+                        (15 + 1 bonus)
+                    </h4>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">7,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('33 Diamonds ( 30 + 3 Bonus )', '14,000 ກີບ')">
+
+                    <h4>33 Diamonds💎💎</br>
+                        (30 + 3 bonus)
+                    </h4>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">14,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('53 Diamonds ( 48 + 5 Bonus )', '22,000 ກີບ')">
+
+                    <h4>53 Diamonds💎💎</br>
+                        (48 + 5 bonus)
+                    </h4>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">22,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('67 Diamonds ( 60 + 7 Bonus )', '28,000 ກີບ')">
+
+                    <h4>67 Diamonds💎💎</br>
+                        (60 + 7 bonus)
+                    </h4>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">28,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('201 Diamonds ( 179 + 22 Bonus )', '84,000 ກີບ')">
+
+                    <h4>201 Diamonds💎💎</br>
+                        (179 + 22 bonus)
+                    </h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">84,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('337 Diamonds ( 298 + 39 Bonus )', '140,000 ກີບ')">
+
+                    <h4>337 Diamonds💎💎</br>
+                        (298 + 39 bonus)
+                    </h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">140,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('551 Diamonds ( 477 + 74 Bonus )', '224,000 ກີບ')">
+
+                    <h4>551 Diamonds💎💎</br>
+                        (477 + 74 bonus)
+                    </h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">224,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('689 Diamonds ( 596 + 93 Bonus )', '280,000 ກີບ')">
+
+                    <h4>689 Diamonds💎💎</br>
+                        (596 + 93 bonus)
+                    </h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">280,000 kip</p>
+                </div>
+
+                <div class="product-card" onclick="selectProduct('1063 Diamonds ( 893 + 170 Bonus )', '420,000 ກີບ')">
+
+                    <h4>1063 Diamonds💎💎</br>
+                        (893 + 170 bonus)
+                    </h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="55" height="55" viewBox="0 0 512 512">
+                        <defs>
+                            <linearGradient id="diamondBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#C8F6FF" />
+                                <stop offset="35%" stop-color="#73D9FF" />
+                                <stop offset="70%" stop-color="#25B8FF" />
+                                <stop offset="100%" stop-color="#008BFF" />
+                            </linearGradient>
+                        </defs>
+
+                        <g fill="url(#diamondBlue)">
+                            <polygon points="170,110 342,110 385,140 330,170 182,170 127,140" />
+                            <polygon points="127,140 182,170 165,235 95,190" />
+                            <polygon points="385,140 417,190 347,235 330,170" />
+                            <polygon points="182,170 330,170 347,235 165,235" />
+                            <polygon points="165,235 347,235 256,420" />
+                            <polygon points="95,190 165,235 256,420" />
+                            <polygon points="417,190 347,235 256,420" />
+                        </g>
+                    </svg>
+
+                    <p style="color: #00ff88;">420,000 kip</p>
+                </div>
+
+            </div>
+
+        </div>
+        </div>
+
+
+
+        <div class="bottom-sheet-overlay" id="sheetoverlay" onclick="closeSheet()"></div>
+        <div class="bottom-sheet" id="orderSheet">
+            <div class="sheet-content">
+                <button class="btn-close" onclick="closeSheet()">✕</button>
+                <h3>ລາຍການຄຳສັ່ງຊື້</h3>
+                <br>
+
+                <div class="sheet-row">
+                    <span>UID / Zone ID:</span>
+                    <span id="displayTarget"></span>
+                </div>
+                <div class="sheet-row">
+                    <span>ສິນຄ້າ:</span>
+                    <span id="displayProduct" style="font-weight: bold;"></span>
+                </div>
+                <div class="sheet-row">
+                    <span>ຄ່າທຳນຽມ:</span>
+                    <span id="displayFee" style="font-weight: bold;"></span>
+                </div>
+                <div class="sheet-row">
+                    <span>ຍອດລວມທັງໝົດ:</span>
+                    <span id="displaytotal" style="color: #00ff88; font-size: 20px; font-weight: bold;"></span>
+                </div>
+
+                <button class="btn-confirm" onclick="submitOrder()">ຢືນຢັນຄຳສັ່ງຊື້</button>
+            </div>
+        </div>
+
+
+
+        <div class="contact-box">
+            <p>.......</p>
+            <p style="font-size: 25px;font-weight: bold;">ບໍລິການເຕີມເກມອອນລາຍ ລາຄາຖືກ ປອດໄພ ວ່ອງໄວ ຕະຫຼອດ 24 ຊົ່ວໂມງ
+            </p>
+            <br>
+            <div class="contact-box-1">
+                <p style="font-weight: bold; font-size: 25px;">ກໍລະນີເຕີມບໍ່ໄດ້ ກະລຸນາຕິດຕໍ່ທາງ:</p>
+                <p>📧Gmail : be@gmail.com</p>
+                <p>📱Whatsapp : +8562058764321</p>
+            </div>
+
+            <br>
+            <hr>
+            <br>
+            <a href="Terms and Conditions.html">ຂໍ້ຕົກລົງ ແລະ ເງື່ອນໄຂບໍລິການ.</a> <br>
+
+            <a href="Privacy Policy.html">ນະໂຍບາຍສ່ວນໂຕ.</a>
+            <P class="footer-copy">© All rights reserved.Designed for Gamers 🎮</P>
+        </div>
+
+
+
+        <script>
+            // 🛠️ ແກ້ໄຂບັນຫາກົດປຸ່ມບໍ່ໄດ້: ຂຽນຟັງຊັນຄວບຄຸມການ ເປີດ-ປິດ ໃຫ້ຄົບຖ້ວນ
+            const menuBtn = document.getElementById('menuBtn');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+
+            // ຟັງຊັນສຳລັບ ເປີດ ຫຼື ປິດ ເມນູ (Toggle)
+            function toggleMenu() {
+                sidebar.classList.toggle('active');
+                overlay.classList.toggle('active');
+            }
+
+            // ເມື່ອກົດປຸ່ມສາມຂີດ ໃຫ້ເປີດເມນູດ້ານຂ້າງອອກມາ
+            menuBtn.addEventListener('click', toggleMenu);
+
+            // ເມື່ອກົດພື້ນຫຼັງມືດ (Overlay) ໃຫ້ປິດເມນູກັບຄືນໄປຊ່ອນຄືເກົ່າ
+            overlay.addEventListener('click', toggleMenu);
+        </script>
+
+        <script>
+            let selectedPrice = 0;
+            // ຟັງຊັນເຮັດວຽກເມື່ອກົດເລືອກສິນຄ້າ
+            function selectProduct(productName, productPrice) {
+                // ດຶງຄ່າຈາກ UID ແລະ Zone ID ມາເຊັກກ່ອນ
+                const uid = document.getElementById('userId').value;
+                const zone = document.getElementById('zoneId').value;
+
+                // ຖ້າບໍ່ທັນປ້ອນ ID ເທື່ອ ຈະແຈ້ງເຕືອນໃຫ້ປ້ອນກ່ອນ
+                if (!uid || !zone) {
+                    alert("ກະລຸນາປ້ອນ UID ແລະ Zone ID ໃຫ້ຄົບຖ້ວນກ່ອນ!");
+                    return;
+                }
+
+                const fee = 0
+                const priceValue = parseInt(productPrice.replace(/\D/g, ''));
+                const total = priceValue + fee
+
+                selectedPrice = total;
+
+
+                // ເອົາຂໍ້ມູນໄປສະແດງໃນ ປັອບອັບ (Bottom Sheet)
+                document.getElementById('displayTarget').innerText = uid + " (" + zone + ")";
+                document.getElementById('displayProduct').innerText = productName;
+                // document.getElementById('displayPrice').innerText = productPrice + " ກີບ "; //
+                document.getElementById('displayFee').innerText = fee.toLocaleString() + " ກີບ "
+                document.getElementById('displaytotal').innerText = total.toLocaleString() + " ກີບ "
+
+
+                // ສະແດງປັອບອັບ (ເລື້ອນຂຶ້ນມາ)
+                document.getElementById('sheetoverlay').style.display = 'block';
+                document.getElementById('orderSheet').classList.add('active');
+            }
+
+            // ຟັງຊັນປິດຕາຕະລາງປັອບອັບ
+            function closeSheet() {
+                document.getElementById('sheetoverlay').style.display = 'none';
+                document.getElementById('orderSheet').classList.remove('active');
+            }
+
+            // ຟັງຊັນເມື່ອກົດປຸ່ມຢືນຢັນສຸດທ້າຍ
+            //function submitOrder() {
+            //  alert("ດຳເນີນການສັ່ງຊື້ສຳເລັດແລ້ວ!");
+            // closeSheet();}//
+            function submitOrder() {
+
+                buyPackage(selectedPrice);
+
+                closeSheet();
+
+            }
+
+        </script>
+        <script>
+            function buyPackage(price) {
+
+                let balance = Number(localStorage.getItem("balance")) || 0;
+
+                if (balance >= price) {
+
+                    let newBalance = balance - price;
+
+                    localStorage.setItem("balance", newBalance);
+
+                    document.getElementById("balance").textContent =
+                        newBalance.toLocaleString();
+
+                    alert(
+                        "ຊື້ Package ສຳເລັດ\n" +
+                        "ຫັກ: " + price.toLocaleString() + " ກີບ\n" +
+                        "ເຫຼືອ: " + newBalance.toLocaleString() + " ກີບ"
+                    );
+                } else {
+
+                    alert("ເງິນບໍ່ພໍ");
+
+                }
+            }
+        </script>
+
+
+</body>
+
+</html>

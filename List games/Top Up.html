@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="lo">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Game Top-up Store</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+    <style>
+        /* ==========================================
+           1. ສ່ວນຂອງ CSS (ແຕ່ງສີສັນ ແລະ Layout)
+           ========================================== */
+
+
+        /* .auth-box {
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+        } */
+        .auth-box {
+            max-width: 450px;
+            margin: 50px auto;
+            background: white;
+            color: black;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, .3);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
+        }
+
+        body {
+            margin: 0;
+            /*ລຶບໄລຍະຫ່າງ */
+            padding: 0;
+            /* ແມ່ນໄລຍະຫ່າງພາຍໃນ */
+            overflow-x: hidden;
+            /* background-color: #14143A; */
+            /* ສີມ່ວງພື້ນຫຼັງ */
+            color: #000000;
+            font-family: 'Phetsarath OT', sans-serif;
+            /* ບ່ອນປ່ຽນຕົວໜັງສື */
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #13001e 0%, #2d0057 50%, #0d0025 100%);
+            z-index: -1;
+        }
+
+        /* ຈັດແຖບ Header ດ້ານເທິງ */
+        .main-header {
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            justify-content: space-between;
+            /* ແຍກອົງປະກອບໃຫ້ຢູ່ສົ້ນຊ້າຍ ແລະ ສົ້ນຂວາທີ່ສຸດ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບໃຫ້ຢູ່ເຄິ່ງກາງຕາມແນວຕັ້ງ */
+            padding: 12px 24px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນ(ເທິງ-ລຸ່ມ 12px, ຊ້າຍ-ຂວາ 20px) */
+            background-color: rgba(10, 0, 28, 0.85);
+            /* ສີມ່ວງເຂັ້ມ */
+            box-shadow: 0 4px 32px rgba(79, 15, 147, 0.5);
+            /* ໃສ່ເຫງົາທາງລຸ່ມໃຫ້ເບິ່ງມີມິຕິ */
+            position: fixed;
+            /* ຕັ້ງຄ່າໃຫ້ແຖບຕິດເກາະຕິດໜ້າຈໍເວລາເລື່ອນລົງ */
+            top: 0;
+            /* ໃຫ້ແຖບຕິດຢູ່ຂອບເທິງສຸດຂອງໜ໊າຈໍ */
+            right: 0;
+            left: 0;
+            z-index: 50;
+            /* ຕັ້ງຄ່າໃຫ້ແຖບຢູ່ຊັ້ນເທິງສຸດ */
+        }
+
+        .header-left {
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            align-items: center;
+            /* ຈັດທຸກອົງປະກອບໃຫ້ຢູ່ເຄິ່ງກາງຕາມແນວຕັ້ງ */
+            gap: 15px;
+            /* ເພີ່ມໄລຍະຫ່າງລະຫວ່າງເເຕ່ລະອົງປະກອບໃຫ້ຫ່າງກັນ */
+        }
+
+        /* ປຸ່ມສາມຂີດ Hamburger */
+        .menu-trigger-btn {
+            background: none;
+            /* ໃຫັໂປ່ງໃສ */
+            border: none;
+            /* ບໍ່ໃຫ້ມີເສັ້ນຂອບຂອງປຸ່ມ */
+            color: rgb(255, 255, 255);
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            cursor: pointer;
+            /* ປ່ຽນຮູບຮ່າງ mouse ໃຫ້ເປັນຮູບມື */
+            padding: 8px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນອ້ອມຮອບປຸ່ມ */
+            border-radius: 6px;
+            /*ປັບຂອບປຸ່ມໃຫ້ມີຄວາມມົນ */
+            transition: 0.2s;
+            /*ຕັ້ງຄ່າເອັບເຟັກເວລາປ່ຽນແປງ */
+            display: flex;
+            /* ຈັດລຽງອົງປະກອບພາຍໃນໃຫ້ລຽງເປັນແຖວນອນ */
+            align-items: center;
+            /* ຈັດໄອຄອນທາງໃນຢູ່ເຄິ່ງກາງປຸ່ມຕາມແນວຕັ້ງ */
+            justify-content: center;
+            /* ຈັດໃຫ້ໄອຄອນທາງໃນຢູ່ເຄີ່ງກາງປຸ່ມຕາມແນວນອນ */
+        }
+
+        .menu-trigger-btn:hover {
+            background-color: rgba(157, 78, 221, 0.2);
+            /*ເມື່ອເອົາ mouse ໄປຊີ້ ໃຫ້ພື້ນຫຼັງເປັນສີຂາວຈາງໆ */
+        }
+
+        .icon-svg {
+            width: 28px;
+            /* ກຳນົດຄວາມກ້ວງໄອຄອນ */
+            height: 28px;
+            /* ກຳນົດຄວາມສູງຂອງໄອຄອນ */
+        }
+
+        /* ໂລໂກ້ kkkkkkkkkkk */
+        .logo-badge {
+            background-color: #d946ef;
+            /* ໃສສີພື້ນຫລັງ */
+            color: rgb(255, 255, 255);
+            /* ຕັ້ງຄ່າສີຕົວອັກສອນ */
+            font-weight: bold;
+            /*ປັບຕົວອັກສອນໃຫ້ເຂັ້ມຂື້ນ */
+            padding: 6px 16px;
+            /* ເພີ່ມໄລຍະຫ່າງພາຍໃນ(ເທິງ-ລຸ່ມ 6 px, ຊ້າຍຂວາ 16 px) */
+            border-radius: 8px;
+            /* ປັບຂອບໂລໂກ້ໃຫ້ມົນ */
+            transform: rotate(-3deg);
+            /*ໜູນກ່ອງໂລໂກ້ໃຫ້ອຽງໄປທາງຊ້າຍເລັກນ້ອຍ 3 ອົງສາ */
+            font-size: 16px;
+            /* ກຳນົດຂະໜາດຕົວອັກສອນ */
+            box-shadow: 0 4px 10px rgba(217, 70, 239, 0.3);
+            /*ໃສ່ເຫງົາທາງລຸ່ມໃຫ້ເປັນສີບົວຈາງໆໃນກ່ອງ */
+        }
+
+        .money {
+            background: #be3cbe;
+            color: white;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* ================= SIDEBAR ================= */
+
+        .main-sidebar {
+            position: fixed;
+            /*ຕັ້ງຄ່າໃຫ້ແຖບເມນູຂ້າງເກາະຕິດໜ້າຈໍຕະຫຼອດ */
+            top: 60px;
+            /* ຫຼົບແຖບ Header */
+            left: -300px;
+            /* ຊ່ອນໄວ້ທາງຊ້າຍສຸດຫຼຸດຂອບຈໍ */
+            width: 250px;
+            /*ກຳນົດຄວາມກ້ວາງຂອງແຖບເມນູຂ້າງ*/
+            height: calc(100vh - 60px);
+            /*ຄຳນວນຄວາມສູງໃຫ້ເຕັມຈໍພໍດີ ໂດຍເອົາຄວາມສູງຈໍທັງໝົດລົບອອກ60 px*/
+            background-color: #1e1145;
+            /*ໃສ່ສີພື້ນຫຼັງ */
+            padding: 20px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນເມນູອ້ອມຮອບ */
+            z-index: 40;
+            /*ຕັ້ງຄ່າຊັ້ນໃຫ້ຢູ່ເທິງສາກພື້ນຫຼັງ ເພື່ອ ໃຫ້ກົດເມນູໄດ້*/
+            transition: left 0.3s ease;
+            /* ເລື່ອນອອກມາແບບນຸ້ມນວນ */
+            box-shadow: 4px 0 10px rgba(0, 0, 0, 0.3);
+            /*ໃສ່ເງົາທາງດ້ານຂວາ*/
+        }
+
+        .main-sidebar.active {
+            left: 0;
+            /* ເລື່ອນອອກມາເມື່ອຖືກກົດ */
+        }
+
+        .sidebar-list {
+            list-style: none;
+            /*ຕັດຈຸດດຳ*/
+            padding: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍໃນທີ່ຕິດມາກັບ Tag ລາຍການອອກ*/
+            margin: 0;
+            /*ຕັດໄລຍະຫ່າງພາຍນອກທີ່ຕິດມາກັບ Tag ລາຍການອອກ*/
+        }
+
+        .sidebar-item {
+            display: block;
+            /*ປ່ຽນໃຫ້ເປັນ block ເພື່ອສາມາດກົດໄດ້ເຕັມແຖວ*/
+            padding: 14px 16px;
+            /*ເພີ່ມໄລຍະຫ່າງພາຍໃນ*/
+            color: white;
+            /*ຕັ້ງຄ່າສູຕົວອັກສອນ*/
+            text-decoration: none;
+            /*ຕັດເສັ້ນຂີດກ້ອງຂໍ້ຄວາມອອກ*/
+            border-radius: 8px;
+            /* ປັບຂອບຂອງແຕ່ລະລາຍການເມນູໃຫ້ມີຄວາມມົນ*/
+            margin-bottom: 8px;
+            /*ເພີ່ມໄລຍະຫ່າງດ້ານລຸ່ມ ເພື່ອໃຫ້ແຕ່ລະເມນູແຍກຫ່າງກັນ*/
+            font-weight: bold;
+            /*ປັບຕົວອັກສອນໃຫ້ໜາຂື້ນ*/
+            transition: 0.2s;
+            /*ຕັ້ງຄ່າເອັບເຟັກຕອນເອົາ mouse ໄປຊີ້ */
+        }
+
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+            /*ປ່ຽໜສີພື້ນຫລັງໃຫ້ເປັນສີຂາວຈາງໆ*/
+            color: #3c5de1;
+            /*ປ່ຽນສີຕົວອັກສອນ*/
+        }
+
+        /* --- Sidebar (ແຖບເມນູດ້ານຂ້າງ) & Overlay --- */
+        .menu-overlay {
+            position: fixed;
+            /*ຕັ່ງຄ່າໃຫ້ກ່ອງນີ້ຕິດໜ້າຈໍຕະຫຼອດ */
+            inset: 0;
+            /*ຍຶດກ່ອງນີ້ໃຫ້ເຕັມຈໍ 4ດ້ານ */
+            background-color: rgba(0, 0, 0, 0.6);
+            /*ໃສ່ສີພື້ນຫຼັງ*/
+            z-index: 30;
+            /*ຕັ້ງຄ່າຊັ້ນໃຫ້ຢູ່ເທິງເນື້ອຫາທົ່ວໄປ ແຕ່ຢູ່ແຖບເມນູຂ້າງ*/
+            display: none;
+            /* ຊ່ອນໄວ້ກ່ອນ */
+            opacity: 0;
+            /*ຕັ້ງຄ່າຄວາມໂປ່ງໃສ */
+            transition: opacity 0.3s ease;
+            /*ຕັ້ງຄ່າເອັບເຟັດຕອນຄ່ອຍໆແຈ້ງ*/
+        }
+
+        .menu-overlay.active {
+            display: block;
+            /*ສັ່ງໃຫ້ສາກພື້ນຫຼັງສະແດງຜົນອອກມາ*/
+            opacity: 1;
+            /*ປັບຄວາມເຂັ້ມໃຫ້ເຫັນສາກພື້ນຫຼັງໄດ້ຊັດເຈນ */
+        }
+
+        /* ================= CONTENT ================= */
+
+        .container {
+            max-width: 700px;
+            margin: 110px auto;
+            padding: 20px;
+        }
+
+        .title {
+            text-align: center;
+            margin-bottom: 30px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .qr-section {
+            background: white;
+            padding: 35px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        }
+
+        .qr-section h2 {
+            margin-bottom: 20px;
+            color: #444;
+        }
+
+        input {
+            width: 100%;
+            max-width: 320px;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            outline: none;
+            transition: .3s;
+        }
+
+        input:focus {
+            border-color: #082ed8;
+        }
+
+        button {
+            padding: 13px 28px;
+            margin: 12px 5px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        button:first-of-type {
+            background: #220645;
+            color: white;
+        }
+
+        button:first-of-type:hover {
+            background: #1d4ed8;
+        }
+
+        #confirmBtn {
+            background: #16a34a;
+            color: white;
+        }
+
+        #confirmBtn:hover {
+            background: #15803d;
+        }
+
+        #qrcode {
+            margin-top: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #qrcode img {
+            border: 8px solid white;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgb(43, 24, 67);
+        }
+
+        /* ຊ່ອງທາງການຕິດຕໍ່ */
+        .contact-box {
+            /* ໃສ່ສີພື້ນຫຼັງ ແລະ ຄວາມໂຄ້ງໃຫ້ຄືກັບບ໋ອກເທິງ */
+            background-color: rgba(10, 0, 28, 0.80);
+            /* border-radius: 16px;     */
+            height: auto;
+            min-height: unset;
+            margin: 0;
+            padding: 24px 16px 40px 16px;
+            text-align: center;
+            /* ຖ້າມີເງົາ ຫຼື ຂອບສາມາດໃສ່ເພີ່ມໄດ້ */
+            box-shadow: 0 4px 15px rgba(71, 3, 3, 0.1);
+            width: 100%;
+        }
+
+        .contact-box a {
+            color: white;
+            text-decoration: none;
+            font-size: 19px;
+            font-weight: bold;
+
+
+        }
+
+
+        @media (min-width: 1024px) {
+            .contact-box {
+                width: 100%;
+
+            }
+        }
+
+        .contact-box-1 {
+
+
+            display: inline-block;
+            background: rgba(79, 15, 147, 0.30);
+            border: 1px solid rgba(157, 78, 221, 0.35);
+            border-radius: 16px;
+            padding: 24px 36px;
+            margin-bottom: 28px;
+            backdrop-filter: blur(8px);
+            box-shadow: rgba(157, 78, 221, 0.5);
+            border: 1px solid rgba(200, 100, 255, 0.5);
+
+        }
+
+
+        /* ປັບຂະໜາດຕົວໜັງສື Gmail ແລະ Whatsapp */
+        .contact-box-1 p {
+            font-size: 1.1rem;
+            color: #e0e0e0;
+            margin: 8px 0;
+            margin: -1px;
+        }
+
+        .footer-copy {
+            font-size: 0.85rem;
+            color: white;
+            margin: 0;
+            margin-top: 20px;
+        }
+
+        hr {
+            border: none;
+            height: 2px;
+            background: linear-gradient(to right, transparent, white, transparent);
+            opacity: 0.6;
+        }
+
+        /* ================= MOBILE ================= */
+
+        @media(max-width:768px) {
+
+            .main-header {
+                padding: 0 15px;
+            }
+
+            .money {
+                font-size: 15px;
+                padding: 8px 12px;
+            }
+
+            .container {
+                margin-top: 100px;
+                padding: 15px;
+            }
+
+            .qr-section {
+                padding: 20px;
+            }
+
+            input {
+                width: 100%;
+            }
+        }
+
+        .main-header>div:last-child {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-left: auto;
+        }
+
+        .money {
+            background: #9767d1;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="header-left">
+            <button id="menuBtn" class="menu-trigger-btn">
+                <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"
+                        d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+            </button>
+            <div class="logo-badge">
+                kkkkkkkkkkk
+            </div>
+        </div>
+        <div class="money">
+            💵 <span id="balance">0</span>LAk
+        </div>
+    </header>
+    <div id="overlay" class="menu-overlay"></div>
+
+    <aside id="sidebar" class="main-sidebar">
+        <ul class="sidebar-list">
+            <li><a href="Home1.html" class="sidebar-item">🏠 ໜ້າຫຼັກ</a></li>
+            <li><a href="Game.html" class="sidebar-item">🎮 ເຕີມເກມ</a></li>
+            <li><a href="Moblie.html" class="sidebar-item">📱 ເຕີມເງິນມືຖື</a></li>
+            <li><a href="Top Up.html" class="sidebar-item">💳 ເຕີມເງິນ</a></li>
+        </ul>
+    </aside>
+
+    <div class="container">
+        <h1 class="title">
+            ເຕີມເງິນ
+        </h1>
+        <div class="qr-section">
+            <h2>
+                ສ້າງ QR ສຳລັບເຕີມເງິນ
+            </h2>
+            <input id="amount" type="number" placeholder="ໃສ່ຈຳນວນເງິນ">
+            <br>
+            <button onclick="generateQR()">
+                ສ້າງ QR
+            </button>
+            <button id="confirmBtn" onclick="confirmPayment()" style="display:none;">
+                ຢືນຢັນການຈ່າຍ
+            </button>
+            <div id="qrcode"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <div class="contact-box">
+        <p>.......</p>
+        <p style="font-size: 25px;font-weight: bold; color:white;">ບໍລິການເຕີມເກມອອນລາຍ ລາຄາຖືກ ປອດໄພ ວ່ອງໄວ ຕະຫຼອດ 24
+            ຊົ່ວໂມງ
+        </p>
+        <br>
+        <div class="contact-box-1">
+            <p style="font-weight: bold; font-size: 25px;">ກໍລະນີເຕີມບໍ່ໄດ້ ກະລຸນາຕິດຕໍ່ທາງ:</p>
+            <p>📧Gmail : be@gmail.com</p>
+            <p>📱Whatsapp : +8562058764321</p>
+        </div>
+
+        <br>
+        <hr>
+        <br>
+        <a href="Terms and Conditions.html">ຂໍ້ຕົກລົງ ແລະ ເງື່ອນໄຂບໍລິການ.</a> <br>
+
+        <a href="Privacy Policy.html">ນະໂຍບາຍສ່ວນໂຕ.</a>
+        <P class="footer-copy">© All rights reserved.Designed for Gamers 🎮</P>
+    </div>
+</body>
+
+</html>
+<script>
+    // =============================
+    // ລະບົບເງິນ
+    // =============================
+    let balance = Number(
+        localStorage.getItem("balance") || 0
+    );
+    let pendingAmount = 0;
+    // ສະແດງເງິນເມື່ອເປີດໜ້າ
+    document.getElementById("balance").innerHTML =
+        balance.toLocaleString() + " ";
+    // =============================
+    // ສ້າງ QR
+    // (ບໍ່ເພີ່ມເງິນ)
+    // =============================
+
+    function generateQR() {
+        let amount =
+            document.getElementById("amount").value;
+        if (amount == "" || amount <= 0) {
+            alert("ກະລຸນາໃສ່ຈຳນວນເງິນ");
+
+            return;
+        }
+        pendingAmount = Number(amount);
+        // ລ້າງ QR ເກົ່າ
+        document.getElementById("qrcode").innerHTML = "";
+
+        // ສ້າງ QR
+        new QRCode(
+
+            document.getElementById("qrcode"),
+            {
+                text:
+                    "TOPUP " + pendingAmount + " LAK",
+
+                width: 200,
+
+                height: 200
+            }
+
+        );
+        // ສະແດງປຸ່ມຢືນຢັນ
+
+        document.getElementById("confirmBtn")
+            .style.display = "inline-block";
+        alert(
+            "ກະລຸນາສະແກນ QR ແລະຈ່າຍເງິນກ່ອນ"
+        );
+    }
+    // =============================
+    // ຢືນຢັນຫຼັງຈ່າຍ
+    // ຈຶ່ງເພີ່ມເງິນ
+    // =============================
+    function confirmPayment() {
+        if (pendingAmount == 0) {
+            alert(
+                "ກະລຸນາສ້າງ QR ກ່ອນ"
+            );
+            return;
+        }
+
+        balance += pendingAmount;
+        // ເກັບເງິນ
+        localStorage.setItem(
+            "balance",
+            balance
+        );
+
+        // ສະແດງເງິນ
+        document.getElementById("balance").innerHTML =
+            balance.toLocaleString() + " ";
+        alert(
+            "ເຕີມເງິນສຳເລັດ +"
+            + pendingAmount + " "
+        );
+        // ຣີເຊັດ
+        pendingAmount = 0;
+        document.getElementById("confirmBtn")
+            .style.display = "none";
+    }
+    // =============================
+    // MENU ເປີດ-ປິດ
+    // =============================
+
+
+    // 🛠️ ແກ້ໄຂບັນຫາກົດປຸ່ມບໍ່ໄດ້: ຂຽນຟັງຊັນຄວບຄຸມການ ເປີດ-ປິດ ໃຫ້ຄົບຖ້ວນ
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    // ຟັງຊັນສຳລັບ ເປີດ ຫຼື ປິດ ເມນູ (Toggle)
+    function toggleMenu() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    // ເມື່ອກົດປຸ່ມສາມຂີດ ໃຫ້ເປີດເມນູດ້ານຂ້າງອອກມາ
+    menuBtn.addEventListener('click', toggleMenu);
+
+    // ເມື່ອກົດພື້ນຫຼັງມືດ (Overlay) ໃຫ້ປິດເມນູກັບຄືນໄປຊ່ອນຄືເກົ່າ
+    overlay.addEventListener('click', toggleMenu);
+</script>
+
+
+</body>
+
+</html>
