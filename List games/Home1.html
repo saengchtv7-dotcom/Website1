@@ -575,29 +575,7 @@
         </p>
     </div>
 
-    <!-- REGISTER -->
-    <div id="registerBox" class="auth-box hidden">
-        <h2 class="mb-3">Register</h2>
-
-        <input id="username" class="form-control mb-3" type="text" placeholder="Username">
-
-        <input id="email" class="form-control mb-3" type="email" placeholder="Email">
-
-        <input id="password" class="form-control mb-3" type="password" placeholder="Password">
-
-        <input id="confirmPassword" class="form-control mb-3" type="password" placeholder="Confirm Password">
-
-        <button class="btn btn-success w-100" onclick="registerUser()">
-            Register
-        </button>
-
-        <p class="mt-3 text-center">
-            Already have account?
-            <a href="#" onclick="showLogin()">
-                Login now
-            </a>
-        </p>
-    </div>
+    
 
     <!-- STORE PAGE -->
     <section id="storePage">
@@ -619,9 +597,7 @@
                 <div class="money">
                     💵 <span id="balance">0</span> LAK</div>
 
-                <button class="btn-register " onclick="logout()">
-                    Logout
-
+               
             </div>
         </header>
 
@@ -806,75 +782,7 @@
             <a href="Privacy Policy.html">ນະໂຍບາຍສ່ວນໂຕ.</a>
             <P class="footer-copy">© All rights reserved.Designed for Gamers 🎮</P>
         </div>
-        <script>
-            function showRegister() {
-                document.getElementById("loginBox").classList.add("hidden");
-                document.getElementById("registerBox").classList.remove("hidden");
-            }
-
-            function showLogin() {
-                document.getElementById("registerBox").classList.add("hidden");
-                document.getElementById("loginBox").classList.remove("hidden");
-            }
-
-            function registerUser() {
-
-                let username = document.getElementById("username").value;
-                let email = document.getElementById("email").value;
-                let password = document.getElementById("password").value;
-                let confirmPassword = document.getElementById("confirmPassword").value;
-
-                if (username == "" || email == "" || password == "") {
-                    alert("ກະລຸນາປ້ອນຂໍ້ມູນໃຫ້ຄົບ");
-                    return;
-                }
-
-                if (password !== confirmPassword) {
-                    alert("Password ບໍ່ກົງກັນ");
-                    return;
-                }
-
-                localStorage.setItem("username", username);
-                localStorage.setItem("email", email);
-                localStorage.setItem("password", password);
-
-                alert("ສະໝັກສຳເລັດ");
-
-                showLogin();
-            }
-
-            function login() {
-
-                let email = document.getElementById("loginEmail").value;
-                let password = document.getElementById("loginPassword").value;
-
-                let savedEmail = localStorage.getItem("email");
-                let savedPassword = localStorage.getItem("password");
-
-                if (email === savedEmail && password === savedPassword) {
-
-                    // ປິດ Login
-                    document.getElementById("loginBox").style.display = "none";
-
-                    // ເປີດໜ້າຫຼັກ
-                    document.getElementById("storePage").style.display = "block";
-
-                } else {
-                    alert("Email ຫຼື Password ບໍ່ຖືກ");
-                }
-            }
-
-            function logout() {
-
-                // ປິດໜ້າຫຼັກ
-                document.getElementById("storePage").style.display = "none";
-
-                // ເປີດ Login
-                document.getElementById("loginBox").style.display = "block";
-
-            }
-
-        </script>
+        
         <script>
             // 🛠️ ແກ້ໄຂບັນຫາກົດປຸ່ມບໍ່ໄດ້: ຂຽນຟັງຊັນຄວບຄຸມການ ເປີດ-ປິດ ໃຫ້ຄົບຖ້ວນ
             const menuBtn = document.getElementById('menuBtn');
